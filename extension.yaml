@@ -1,0 +1,96 @@
+# Learn detailed information about the fields of an extension.yaml file in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml
+
+# Identifier for your extension
+name: altcha-app-check-provider
+version: 0.0.5  # Follow semver versioning
+specVersion: v1beta  # Version of the Firebase Extensions specification
+
+# Friendly display name for your extension (~3-5 words)
+displayName: ALTCHA App Check Provider
+
+# Brief description of the task your extension performs (~1 sentence)
+description: >-
+  The ALTCHA App Check Provider for Firebase.
+
+license: Apache-2.0 # https://spdx.org/licenses/
+
+# Public URL for the source code of your extension.
+sourceUrl: https://github.com/altcha-org/firebase-app-check-provider
+
+# Specify whether a paid-tier billing plan is required to use your extension.
+# Learn more in the docs: https://firebase.google.com/docs/extensions/reference/extension-yaml#billing-required-field
+billingRequired: true
+
+icon: icon.png
+tags: [altcha, appcheck, appcheck-provider]
+
+# In an `apis` field, list any Google APIs (like Cloud Translation, BigQuery, etc.)
+# required for your extension to operate.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#apis-field
+
+# In a `roles` field, list any IAM access roles required for your extension to operate.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#roles-field
+
+# In the `resources` field, list each of your extension's functions, including the trigger for each function.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#resources-field
+resources:
+  - name: createAltchaChallenge
+    type: firebaseextensions.v1beta.function
+    description: >-
+      Creates a new ALTCHA challenge.
+    properties:
+      httpsTrigger: {}
+      runtime: "nodejs20"
+  - name: createAppCheckToken
+    type: firebaseextensions.v1beta.function
+    description: >-
+      Exchanges the ALTCHA solution for an App Check token.
+    properties:
+      httpsTrigger: {}
+      runtime: "nodejs20"
+
+# In the `params` field, set up your extension's user-configured parameters.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
+params:
+  - param: HMAC_KEY
+    label: HMAC Key
+    description: >-
+      A random secret string used as a HMAC key for ALTCHA challenges.
+    type: secret
+    required: true
+    immutable: false
+  - param: TOKEN_TTL_MINUTES
+    label: TTL in minutes
+    description: >-
+      This is the length of the App Check token validity in minutes. Valid range is from 30 minutes to 10080 minutes (7 days).
+    type: string
+    default: 30
+    required: false
+    immutable: false
+    validationRegex: ^([3-9][0-9]|[1-9][0-9]{2}|[1-9][0-9]{3}|100[0-7][0-9]|10080)$
+    validationErrorMessage: >-
+      Valid values are between the range of 30 and 10080
+  - param: CHALLENGE_TTL_MINUTES
+    label: ALTCHA Challenge TTL in minutes
+    description: >-
+      This is the length of the ALTCHA challenge validity in minutes. Default: 10.
+    type: string
+    default: 10
+    required: false
+    immutable: false
+  - param: MAX_NUMBER
+    label: ALTCHA maxNumber
+    description: >-
+      Override this parameter if you require different complexity for the ALTCHA challenge. Default: 10000.
+    type: string
+    required: false
+    immutable: false
+    default: 10000
+    validationRegex: ^([3-9][0-9]|[1-9][0-9]{2}|[1-9][0-9]{3}|100[0-7][0-9]|10080)$
+    validationErrorMessage: >-
+      Valid values are between the range of 30 and 10080
